@@ -1,0 +1,35 @@
+{
+  "engineVersion": "5.2.17",
+  "compilerVersion": "5.2.17",
+  "template": {},
+  "target": {
+    "current": "web"
+  },
+  "modules": [
+    {
+      "name": "egret"
+    },
+    {
+      "name": "game"
+    },
+    {
+      "name": "tween"
+    },
+    {
+      "name": "assetsmanager"
+    },
+    {
+      "name": "dragonBones"
+    },
+    {
+      "name": "socket"
+    },
+    {
+      "name": "promise"
+    },
+    {
+      "name": "matchvs",
+      "path": "./libs/matchvs"
+    }
+  ]
+}
