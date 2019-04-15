@@ -11,10 +11,11 @@
 		"libs/matchvs/matchvs.js"
 	],
 	"game": [
+		"bin-debug/game/scene/layout/BasicLayout.js",
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
 		"bin-debug/Platform.js",
 		"bin-debug/game/lib/helper.js",
-		"bin-debug/game/scene/layout/BasicLayout.js"
+		"bin-debug/game/scene/beginScene/beginScene.js"
 	]
 }

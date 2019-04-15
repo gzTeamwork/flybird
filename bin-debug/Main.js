@@ -153,7 +153,7 @@ var Main = (function (_super) {
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
         var bgJungle = this.createBitmapByName("bg_jungle_jpg");
-        var gameScene01 = new BasicLayout(this.width, this.height);
+        var gameScene01 = new BeginScene(this.width, this.height);
         gameScene01.bottomLayer.addChild(bgJungle);
         bgJungle.width = bgJungle.width * stageH / bgJungle.height;
         bgJungle.height = stageH;

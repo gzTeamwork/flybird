@@ -98,7 +98,7 @@ class Main extends egret.DisplayObjectContainer {
         let stageH = this.stage.stageHeight;
 
         let bgJungle = this.createBitmapByName("bg_jungle_jpg");
-        let gameScene01 = new BasicLayout(this.width, this.height);
+        let gameScene01 = new BeginScene(this.width, this.height);
         gameScene01.bottomLayer.addChild(bgJungle);
         bgJungle.width = bgJungle.width * stageH / bgJungle.height;
         bgJungle.height = stageH;

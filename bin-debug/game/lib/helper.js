@@ -5,6 +5,12 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 var GameImageHelper = (function () {
     function GameImageHelper() {
     }
+    GameImageHelper.getImageResourceByName = function (name) {
+        var result = new egret.Bitmap();
+        var texture = RES.getRes(name);
+        result.texture = texture;
+        return result;
+    };
     GameImageHelper.fixScale = function (ImgSp, scaleMode, sw, sh) {
         if (scaleMode == 0) {
             // let nw = 
@@ -16,7 +22,7 @@ var GameImageHelper = (function () {
         if (X === void 0) { X = false; }
         if (Y === void 0) { Y = false; }
         if (X !== false) {
-            Obj.x = (X - Obj.width) / 2;
+            Obj.x = (X > Obj.width ? (X - Obj.width) : Obj.width - X) / 2;
         }
         if (Y !== false) {
             Obj.y = (Y - Obj.height) / 2;
