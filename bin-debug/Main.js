@@ -74,15 +74,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var Main = (function (_super) {
     __extends(Main, _super);
     function Main() {
-        var _this = _super.call(this) || this;
-        _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    Main.prototype.onAddToStage = function (event) {
+    Main.prototype.createChildren = function () {
+        _super.prototype.createChildren.call(this);
         egret.lifecycle.addLifecycleListener(function (context) {
             // custom lifecycle plugin
-            context.onUpdate = function () {
-            };
         });
         egret.lifecycle.onPause = function () {
             egret.ticker.pause();
@@ -90,6 +87,11 @@ var Main = (function (_super) {
         egret.lifecycle.onResume = function () {
             egret.ticker.resume();
         };
+        //inject the custom material parser
+        //注入自定义的素材解析器
+        var assetAdapter = new AssetAdapter();
+        egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
+        egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
         this.runGame().catch(function (e) {
             console.log(e);
         });
@@ -125,82 +127,94 @@ var Main = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 4, , 5]);
                         loadingView = new LoadingUI();
                         this.stage.addChild(loadingView);
                         return [4 /*yield*/, RES.loadConfig("resource/default.res.json", "resource/")];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, RES.loadGroup("preload", 0, loadingView)];
+                        return [4 /*yield*/, this.loadTheme()];
                     case 2:
                         _a.sent();
-                        this.stage.removeChild(loadingView);
-                        return [3 /*break*/, 4];
+                        return [4 /*yield*/, RES.loadGroup("preload", 0, loadingView)];
                     case 3:
+                        _a.sent();
+                        this.stage.removeChild(loadingView);
+                        return [3 /*break*/, 5];
+                    case 4:
                         e_1 = _a.sent();
                         console.error(e_1);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
     };
+    Main.prototype.loadTheme = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            // load skin theme configuration file, you can manually modify the file. And replace the default skin.
+            //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
+            var theme = new eui.Theme("resource/default.thm.json", _this.stage);
+            theme.addEventListener(eui.UIEvent.COMPLETE, function () {
+                resolve();
+            }, _this);
+        });
+    };
     /**
-     * 创建游戏场景
-     * Create a game scene
+     * 创建场景界面
+     * Create scene interface
      */
     Main.prototype.createGameScene = function () {
+        var sky = this.createBitmapByName("bg_jpg");
+        this.addChild(sky);
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
-        var bgJungle = this.createBitmapByName("bg_jungle_jpg");
-        var gameScene01 = new BeginScene(this.width, this.height);
-        gameScene01.bottomLayer.addChild(bgJungle);
-        bgJungle.width = bgJungle.width * stageH / bgJungle.height;
-        bgJungle.height = stageH;
-        bgJungle.x = (stageW - bgJungle.width) / 2;
-        this.addChild(gameScene01);
+        sky.width = stageW;
+        sky.height = stageH;
+        var topMask = new egret.Shape();
+        topMask.graphics.beginFill(0x000000, 0.5);
+        topMask.graphics.drawRect(0, 0, stageW, 172);
+        topMask.graphics.endFill();
+        topMask.y = 33;
+        this.addChild(topMask);
+        var icon = this.createBitmapByName("egret_icon_png");
+        this.addChild(icon);
+        icon.x = 26;
+        icon.y = 33;
+        var line = new egret.Shape();
+        line.graphics.lineStyle(2, 0xffffff);
+        line.graphics.moveTo(0, 0);
+        line.graphics.lineTo(0, 117);
+        line.graphics.endFill();
+        line.x = 172;
+        line.y = 61;
+        this.addChild(line);
+        var colorLabel = new egret.TextField();
+        colorLabel.textColor = 0xffffff;
+        colorLabel.width = stageW - 172;
+        colorLabel.textAlign = "center";
+        colorLabel.text = "Hello Egret";
+        colorLabel.size = 24;
+        colorLabel.x = 172;
+        colorLabel.y = 80;
+        this.addChild(colorLabel);
         var textfield = new egret.TextField();
-        gameScene01.frontLayer.addChild(textfield);
+        this.addChild(textfield);
         textfield.alpha = 0;
+        textfield.width = stageW - 172;
         textfield.textAlign = egret.HorizontalAlign.CENTER;
         textfield.size = 24;
         textfield.textColor = 0xffffff;
-        GameImageHelper.fixAlignCenter(textfield, stageW, stageH, this.stage.x);
+        textfield.x = 172;
+        textfield.y = 135;
         this.textfield = textfield;
-        return;
-        // let sky = this.createBitmapByName("bg_jpg");
-        // this.addChild(sky);
-        // let stageW = this.stage.stageWidth;
-        // let stageH = this.stage.stageHeight;
-        // sky.width = stageW;
-        // sky.height = stageH;
-        // let topMask = new egret.Shape();
-        // topMask.graphics.beginFill(0x000000, 0.5);
-        // topMask.graphics.drawRect(0, 0, stageW, 172);
-        // topMask.graphics.endFill();
-        // topMask.y = 33;
-        // this.addChild(topMask);
-        // let icon = this.createBitmapByName("egret_icon_png");
-        // this.addChild(icon);
-        // icon.x = 26;
-        // icon.y = 33;
-        // let line = new egret.Shape();
-        // line.graphics.lineStyle(2, 0xffffff);
-        // line.graphics.moveTo(0, 0);
-        // line.graphics.lineTo(0, 117);
-        // line.graphics.endFill();
-        // line.x = 172;
-        // line.y = 61;
-        // this.addChild(line);
-        // let colorLabel = new egret.TextField();
-        // colorLabel.textColor = 0xffffff;
-        // colorLabel.width = stageW - 172;
-        // colorLabel.textAlign = "center";
-        // colorLabel.text = "Hello Egret";
-        // colorLabel.size = 24;
-        // colorLabel.x = 172;
-        // colorLabel.y = 80;
-        // this.addChild(colorLabel);
+        var button = new eui.Button();
+        button.label = "Click!";
+        button.horizontalCenter = 0;
+        button.verticalCenter = 0;
+        this.addChild(button);
+        button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
@@ -239,7 +253,18 @@ var Main = (function (_super) {
         };
         change();
     };
+    /**
+     * 点击按钮
+     * Click the button
+     */
+    Main.prototype.onButtonClick = function (e) {
+        var panel = new eui.Panel();
+        panel.title = "Title";
+        panel.horizontalCenter = 0;
+        panel.verticalCenter = 0;
+        this.addChild(panel);
+    };
     return Main;
-}(egret.DisplayObjectContainer));
+}(eui.UILayer));
 __reflect(Main.prototype, "Main");
 //# sourceMappingURL=Main.js.map

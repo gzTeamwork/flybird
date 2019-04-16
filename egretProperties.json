@@ -10,13 +10,19 @@
       "name": "egret"
     },
     {
-      "name": "game"
+      "name": "eui"
+    },
+    {
+      "name": "assetsmanager"
     },
     {
       "name": "tween"
     },
     {
-      "name": "assetsmanager"
+      "name": "game"
+    },
+    {
+      "name": "experimental"
     },
     {
       "name": "dragonBones"
@@ -26,10 +32,6 @@
     },
     {
       "name": "promise"
-    },
-    {
-      "name": "matchvs",
-      "path": "./libs/matchvs"
     }
   ]
 }

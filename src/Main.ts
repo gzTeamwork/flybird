@@ -27,23 +27,14 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-class Main extends egret.DisplayObjectContainer {
+class Main extends eui.UILayer {
 
 
-
-    public constructor() {
-        super();
-        this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
-    }
-
-    private onAddToStage(event: egret.Event) {
+    protected createChildren(): void {
+        super.createChildren();
 
         egret.lifecycle.addLifecycleListener((context) => {
             // custom lifecycle plugin
-
-            context.onUpdate = () => {
-
-            }
         })
 
         egret.lifecycle.onPause = () => {
@@ -54,12 +45,16 @@ class Main extends egret.DisplayObjectContainer {
             egret.ticker.resume();
         }
 
+        //inject the custom material parser
+        //注入自定义的素材解析器
+        let assetAdapter = new AssetAdapter();
+        egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
+        egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
+
+
         this.runGame().catch(e => {
             console.log(e);
         })
-
-
-
     }
 
     private async runGame() {
@@ -78,6 +73,7 @@ class Main extends egret.DisplayObjectContainer {
             const loadingView = new LoadingUI();
             this.stage.addChild(loadingView);
             await RES.loadConfig("resource/default.res.json", "resource/");
+            await this.loadTheme();
             await RES.loadGroup("preload", 0, loadingView);
             this.stage.removeChild(loadingView);
         }
@@ -86,96 +82,96 @@ class Main extends egret.DisplayObjectContainer {
         }
     }
 
+    private loadTheme() {
+        return new Promise((resolve, reject) => {
+            // load skin theme configuration file, you can manually modify the file. And replace the default skin.
+            //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
+            let theme = new eui.Theme("resource/default.thm.json", this.stage);
+            theme.addEventListener(eui.UIEvent.COMPLETE, () => {
+                resolve();
+            }, this);
+
+        })
+    }
+
     private textfield: egret.TextField;
-
     /**
-     * 创建游戏场景
-     * Create a game scene
+     * 创建场景界面
+     * Create scene interface
      */
-    private createGameScene() {
-
+    protected createGameScene(): void {
+        let sky = this.createBitmapByName("bg_jpg");
+        this.addChild(sky);
         let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
+        sky.width = stageW;
+        sky.height = stageH;
 
-        let bgJungle = this.createBitmapByName("bg_jungle_jpg");
-        let gameScene01 = new BeginScene(this.width, this.height);
-        gameScene01.bottomLayer.addChild(bgJungle);
-        bgJungle.width = bgJungle.width * stageH / bgJungle.height;
-        bgJungle.height = stageH;
-        bgJungle.x = (stageW - bgJungle.width) / 2
-        this.addChild(gameScene01);
+        let topMask = new egret.Shape();
+        topMask.graphics.beginFill(0x000000, 0.5);
+        topMask.graphics.drawRect(0, 0, stageW, 172);
+        topMask.graphics.endFill();
+        topMask.y = 33;
+        this.addChild(topMask);
+
+        let icon: egret.Bitmap = this.createBitmapByName("egret_icon_png");
+        this.addChild(icon);
+        icon.x = 26;
+        icon.y = 33;
+
+        let line = new egret.Shape();
+        line.graphics.lineStyle(2, 0xffffff);
+        line.graphics.moveTo(0, 0);
+        line.graphics.lineTo(0, 117);
+        line.graphics.endFill();
+        line.x = 172;
+        line.y = 61;
+        this.addChild(line);
+
+
+        let colorLabel = new egret.TextField();
+        colorLabel.textColor = 0xffffff;
+        colorLabel.width = stageW - 172;
+        colorLabel.textAlign = "center";
+        colorLabel.text = "Hello Egret";
+        colorLabel.size = 24;
+        colorLabel.x = 172;
+        colorLabel.y = 80;
+        this.addChild(colorLabel);
 
         let textfield = new egret.TextField();
-        gameScene01.frontLayer.addChild(textfield);
+        this.addChild(textfield);
         textfield.alpha = 0;
+        textfield.width = stageW - 172;
         textfield.textAlign = egret.HorizontalAlign.CENTER;
         textfield.size = 24;
         textfield.textColor = 0xffffff;
-        GameImageHelper.fixAlignCenter(textfield, stageW, stageH, this.stage.x);
+        textfield.x = 172;
+        textfield.y = 135;
         this.textfield = textfield;
 
-        return;
-
-        // let sky = this.createBitmapByName("bg_jpg");
-        // this.addChild(sky);
-        // let stageW = this.stage.stageWidth;
-        // let stageH = this.stage.stageHeight;
-        // sky.width = stageW;
-        // sky.height = stageH;
-
-        // let topMask = new egret.Shape();
-        // topMask.graphics.beginFill(0x000000, 0.5);
-        // topMask.graphics.drawRect(0, 0, stageW, 172);
-        // topMask.graphics.endFill();
-        // topMask.y = 33;
-        // this.addChild(topMask);
-
-        // let icon = this.createBitmapByName("egret_icon_png");
-        // this.addChild(icon);
-        // icon.x = 26;
-        // icon.y = 33;
-
-        // let line = new egret.Shape();
-        // line.graphics.lineStyle(2, 0xffffff);
-        // line.graphics.moveTo(0, 0);
-        // line.graphics.lineTo(0, 117);
-        // line.graphics.endFill();
-        // line.x = 172;
-        // line.y = 61;
-        // this.addChild(line);
-
-
-        // let colorLabel = new egret.TextField();
-        // colorLabel.textColor = 0xffffff;
-        // colorLabel.width = stageW - 172;
-        // colorLabel.textAlign = "center";
-        // colorLabel.text = "Hello Egret";
-        // colorLabel.size = 24;
-        // colorLabel.x = 172;
-        // colorLabel.y = 80;
-        // this.addChild(colorLabel);
-
-
-
-
+        let button = new eui.Button();
+        button.label = "Click!";
+        button.horizontalCenter = 0;
+        button.verticalCenter = 0;
+        this.addChild(button);
+        button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
     }
-
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
      */
-    private createBitmapByName(name: string) {
+    private createBitmapByName(name: string): egret.Bitmap {
         let result = new egret.Bitmap();
         let texture: egret.Texture = RES.getRes(name);
         result.texture = texture;
         return result;
     }
-
     /**
      * 描述文件加载成功，开始播放动画
      * Description file loading is successful, start to play the animation
      */
-    private startAnimation(result: string[]) {
+    private startAnimation(result: Array<any>): void {
         let parser = new egret.HtmlTextParser();
 
         let textflowArr = result.map(text => parser.parse(text));
@@ -199,5 +195,17 @@ class Main extends egret.DisplayObjectContainer {
         };
 
         change();
+    }
+
+    /**
+     * 点击按钮
+     * Click the button
+     */
+    private onButtonClick(e: egret.TouchEvent) {
+        let panel = new eui.Panel();
+        panel.title = "Title";
+        panel.horizontalCenter = 0;
+        panel.verticalCenter = 0;
+        this.addChild(panel);
     }
 }
