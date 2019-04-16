@@ -132,9 +132,14 @@
 			"name": "egret_icon_png"
 		},
 		{
-			"name": "description_json",
+			"url": "config/description.json",
 			"type": "json",
-			"url": "config/description.json"
+			"name": "description_json"
+		},
+		{
+			"url": "assets/game/demo_jungle.jpg",
+			"type": "image",
+			"name": "demo_jungle_jpg"
 		}
 	]
 }
