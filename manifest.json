@@ -17,7 +17,7 @@
 		"bin-debug/Main.js",
 		"bin-debug/Platform.js",
 		"bin-debug/ThemeAdapter.js",
-		"bin-debug/game/lib/basicScene.js",
+		"bin-debug/game/lib/modules/GameScene.js",
 		"bin-debug/game/scene/beginScene.js"
 	]
 }

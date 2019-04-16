@@ -22,4 +22,4 @@ var GameScene;
     GameScene.basicScene = basicScene;
     __reflect(basicScene.prototype, "GameScene.basicScene");
 })(GameScene || (GameScene = {}));
-//# sourceMappingURL=basicScene.js.map
+//# sourceMappingURL=GameScene.js.map
