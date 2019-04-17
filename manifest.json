@@ -9,7 +9,8 @@
 		"libs/modules/experimental/experimental.js",
 		"libs/modules/dragonBones/dragonBones.js",
 		"libs/modules/socket/socket.js",
-		"libs/modules/promise/promise.js"
+		"libs/modules/promise/promise.js",
+		"libs/physics/physics.js"
 	],
 	"game": [
 		"bin-debug/AssetAdapter.js",

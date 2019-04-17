@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-!function (a) { if ("object" == typeof exports)
+!function (a) { if ("object" == typeof exports){
     module.exports = a();
-else if ("function" == typeof define && false)
+    window.p2 = a();
+}else if ("function" == typeof define && false)
     define(a);
 else {
     var b;

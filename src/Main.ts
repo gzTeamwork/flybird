@@ -26,7 +26,6 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
 class Main extends eui.UILayer {
 
 
@@ -107,9 +106,85 @@ class Main extends eui.UILayer {
         // sky.width = stageW;
         // sky.height = stageH;
 
+        // 创建游戏场景
         let BigenScene = new GameScene.basicScene('src/game/scene/beginScene.exml');
         this.addChild(BigenScene);
+        //  创建p2物理世界
+        let p2World: p2.World = new p2.World();
+        p2World.sleepMode = p2.World.BODY_SLEEPING;
+        p2World.gravity = [0, -0.981]
 
+
+        //  创建地板
+        let rootShape: p2.Plane = new p2.Box({ width: stageW, height: 1 });
+        let rootSkin: egret.DisplayObject = this.createBitmapByName('earth_ground_png');
+        rootSkin.width = stageW / 2, rootSkin.height = 32;
+        rootSkin.x = 32, rootSkin.y = 32;
+        let rootBody: p2.Body = new p2.Body({
+            type: p2.Body.STATIC,
+           position: [10, 4]
+        })
+        rootBody.angle = Math.PI;
+        rootBody.displays = [rootSkin];
+        rootBody.addShape(rootShape);
+        p2World.addBody(rootBody);
+        this.addChild(rootSkin);
+
+        //  创建一个ufo
+        let ufoBody: p2.Body = new p2.Body({
+            mass: 1, fixedRotation: true, type: p2.Body.DYNAMIC,
+            position: [10, 10]
+        });
+        p2World.addBody(ufoBody);
+        let ufoSkin: p2.Shape = new p2.Circle(12);
+        ufoBody.addShape(ufoSkin);
+        let ufoDisplay = this.createBitmapByName('avatar_ufo_png');
+        ufoDisplay.width = 64, ufoDisplay.height = 64;
+        // let ufoDisplay = new egret.Sprite
+        ufoBody.displays = [ufoDisplay]
+
+
+
+
+
+        this.addChild(ufoDisplay);
+
+        //添加帧事件侦听
+        // egret.Ticker.getInstance().register(function (dt) {
+        //     //使世界时间向后运动
+        //     p2World.step(dt / 1000);
+        // }, this);
+
+        var factor: number = 50;
+
+
+        egret.Ticker.getInstance().register(function (dt) {
+            if (dt < 10) {
+                return;
+            }
+            if (dt > 1000) {
+                return;
+            }
+            p2World.step(dt / 1000);
+
+            var stageHeight: number = egret.MainContext.instance.stage.stageHeight;
+            var l = p2World.bodies.length;
+            for (var i: number = 0; i < l; i++) {
+                var boxBody: p2.Body = p2World.bodies[i];
+                var box: egret.DisplayObject = boxBody.displays[0];
+                if (box) {
+                    box.x = boxBody.position[0] * factor;
+                    box.y = stageHeight - boxBody.position[1] * factor;
+                    box.rotation = 360 - (boxBody.angle + boxBody.shapes[0].angle) * 180 / Math.PI;
+                    if (boxBody.sleepState == p2.Body.SLEEPING) {
+                        box.alpha = 0.5;
+                    }
+                    else {
+                        box.alpha = 1;
+                    }
+                }
+            }
+        }, this);
 
 
         let topMask = new egret.Shape();

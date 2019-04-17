@@ -1,31 +1,3 @@
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
@@ -71,6 +43,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 var Main = (function (_super) {
     __extends(Main, _super);
     function Main() {
@@ -172,8 +172,72 @@ var Main = (function (_super) {
         var stageH = this.stage.stageHeight;
         // sky.width = stageW;
         // sky.height = stageH;
+        // 创建游戏场景
         var BigenScene = new GameScene.basicScene('src/game/scene/beginScene.exml');
         this.addChild(BigenScene);
+        //  创建p2物理世界
+        var p2World = new p2.World();
+        p2World.sleepMode = p2.World.BODY_SLEEPING;
+        p2World.gravity = [0, -0.981];
+        //  创建地板
+        var rootShape = new p2.Box({ width: stageW, height: 1 });
+        var rootSkin = this.createBitmapByName('earth_ground_png');
+        rootSkin.width = stageW / 2, rootSkin.height = 32;
+        rootSkin.x = 32, rootSkin.y = 32;
+        var rootBody = new p2.Body({
+            type: p2.Body.STATIC,
+            position: [10, 4]
+        });
+        rootBody.angle = Math.PI;
+        rootBody.displays = [rootSkin];
+        rootBody.addShape(rootShape);
+        p2World.addBody(rootBody);
+        this.addChild(rootSkin);
+        //  创建一个ufo
+        var ufoBody = new p2.Body({
+            mass: 1, fixedRotation: true, type: p2.Body.DYNAMIC,
+            position: [10, 10]
+        });
+        p2World.addBody(ufoBody);
+        var ufoSkin = new p2.Circle(12);
+        ufoBody.addShape(ufoSkin);
+        var ufoDisplay = this.createBitmapByName('avatar_ufo_png');
+        ufoDisplay.width = 64, ufoDisplay.height = 64;
+        // let ufoDisplay = new egret.Sprite
+        ufoBody.displays = [ufoDisplay];
+        this.addChild(ufoDisplay);
+        //添加帧事件侦听
+        // egret.Ticker.getInstance().register(function (dt) {
+        //     //使世界时间向后运动
+        //     p2World.step(dt / 1000);
+        // }, this);
+        var factor = 50;
+        egret.Ticker.getInstance().register(function (dt) {
+            if (dt < 10) {
+                return;
+            }
+            if (dt > 1000) {
+                return;
+            }
+            p2World.step(dt / 1000);
+            var stageHeight = egret.MainContext.instance.stage.stageHeight;
+            var l = p2World.bodies.length;
+            for (var i = 0; i < l; i++) {
+                var boxBody = p2World.bodies[i];
+                var box = boxBody.displays[0];
+                if (box) {
+                    box.x = boxBody.position[0] * factor;
+                    box.y = stageHeight - boxBody.position[1] * factor;
+                    box.rotation = 360 - (boxBody.angle + boxBody.shapes[0].angle) * 180 / Math.PI;
+                    if (boxBody.sleepState == p2.Body.SLEEPING) {
+                        box.alpha = 0.5;
+                    }
+                    else {
+                        box.alpha = 1;
+                    }
+                }
+            }
+        }, this);
         var topMask = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.5);
         topMask.graphics.drawRect(0, 0, stageW, 172);
