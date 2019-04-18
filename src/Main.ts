@@ -122,7 +122,7 @@ class Main extends eui.UILayer {
         rootSkin.x = 32, rootSkin.y = 32;
         let rootBody: p2.Body = new p2.Body({
             type: p2.Body.STATIC,
-           position: [10, 4]
+           position: [11, 4]
         })
         rootBody.angle = Math.PI;
         rootBody.displays = [rootSkin];

@@ -186,7 +186,7 @@ var Main = (function (_super) {
         rootSkin.x = 32, rootSkin.y = 32;
         var rootBody = new p2.Body({
             type: p2.Body.STATIC,
-            position: [10, 4]
+            position: [11, 4]
         });
         rootBody.angle = Math.PI;
         rootBody.displays = [rootSkin];
