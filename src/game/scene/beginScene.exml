@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="NewFile" width="1163" height="640" xmlns:e="http://ns.egret.com/eui" xmlns:ns1="*"
-        xmlns:w="http://ns.egret.com/wing">
+<e:Skin class="NewFile" width="1334" height="750" xmlns:e="http://ns.egret.com/eui" xmlns:ns1="*"
+        xmlns:w="http://ns.egret.com/wing" xmlns:GameScene="GameScene.*">
     
-        <e:Image source="demo_jungle_jpg"  horizontalCenter="0" verticalCenter="0" height="640" width="1163"/>
-	<e:Group width="1163" height="640" x="0" y="0"/>
     
 </e:Skin>

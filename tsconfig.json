@@ -5,6 +5,8 @@
         "experimentalDecorators": true,
         "lib": [
             "es5",
+            "es6",
+            "es7",
             "dom",
             "es2015.promise"
         ],

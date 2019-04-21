@@ -94,21 +94,29 @@ class Main extends eui.UILayer {
     }
 
     private textfield: egret.TextField;
+    private gameWorld: GameWorld.BaseWorld;
     /**
      * 创建场景界面
      * Create scene interface
      */
     protected createGameScene(): void {
-        // let sky = this.createBitmapByName("bg_jpg");
-        // this.addChild(sky);
-        let stageW = this.stage.stageWidth;
+
+        // 创建世界
+        this.gameWorld = new demoWolrd(this);
+        // 创建游戏场景
+        let BigenScene = new GameScene.basicScene('src/game/scene/beginScene.exml');
+        this.addChild(BigenScene);
+        return;
+
+
+            // let sky = this.createBitmapByName("bg_jpg");
+            // this.addChild(sky);
+            let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
         // sky.width = stageW;
         // sky.height = stageH;
 
-        // 创建游戏场景
-        let BigenScene = new GameScene.basicScene('src/game/scene/beginScene.exml');
-        this.addChild(BigenScene);
+        
         //  创建p2物理世界
         let p2World: p2.World = new p2.World();
         p2World.sleepMode = p2.World.BODY_SLEEPING;
@@ -122,7 +130,7 @@ class Main extends eui.UILayer {
         rootSkin.x = 32, rootSkin.y = 32;
         let rootBody: p2.Body = new p2.Body({
             type: p2.Body.STATIC,
-           position: [11, 4]
+            position: [11, 4]
         })
         rootBody.angle = Math.PI;
         rootBody.displays = [rootSkin];
@@ -254,27 +262,27 @@ class Main extends eui.UILayer {
     private startAnimation(result: Array<any>): void {
         let parser = new egret.HtmlTextParser();
 
-        let textflowArr = result.map(text => parser.parse(text));
-        let textfield = this.textfield;
-        let count = -1;
-        let change = () => {
-            count++;
-            if (count >= textflowArr.length) {
-                count = 0;
-            }
-            let textFlow = textflowArr[count];
+        // let textflowArr = result.map(text => parser.parse(text));
+        // let textfield = this.textfield;
+        // let count = -1;
+        // let change = () => {
+        //     count++;
+        //     if (count >= textflowArr.length) {
+        //         count = 0;
+        //     }
+        //     let textFlow = textflowArr[count];
 
-            // 切换描述内容
-            // Switch to described content
-            textfield.textFlow = textFlow;
-            let tw = egret.Tween.get(textfield);
-            tw.to({ "alpha": 1 }, 200);
-            tw.wait(2000);
-            tw.to({ "alpha": 0 }, 200);
-            tw.call(change, this);
-        };
+        //     // 切换描述内容
+        //     // Switch to described content
+        //     textfield.textFlow = textFlow;
+        //     let tw = egret.Tween.get(textfield);
+        //     tw.to({ "alpha": 1 }, 200);
+        //     tw.wait(2000);
+        //     tw.to({ "alpha": 0 }, 200);
+        //     tw.call(change, this);
+        // };
 
-        change();
+        // change();
     }
 
     /**

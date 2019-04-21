@@ -9,5 +9,11 @@
     "useBgImage": true,
     "useBgColor": true,
     "backgroundAlpha": 100
+  },
+  "global": {
+    "globalBindingDataTestObj": []
+  },
+  "16a3b4743ae": {
+    "bindingDataTestObj": []
   }
 }

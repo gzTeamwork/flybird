@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="enterScene" width="1334" height="750" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:GameScene="GameScene.*">
+	<w:Config id="16a3b4743ae"/>
+	<e:Image source="demo_jungle_jpg" anchorOffsetX="0" width="1381.82" anchorOffsetY="0" height="776.89" horizontalCenter="0" verticalCenter="0"/>
+	<e:Label id="t_game_title" text="物理Demo" y="130.17" horizontalCenter="0.5" size="64"/>
+	<e:Button id="btn_game_begin" label="开始游戏" y="407" horizontalCenter="0"/>
+</e:Skin>

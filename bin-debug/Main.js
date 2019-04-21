@@ -166,15 +166,18 @@ var Main = (function (_super) {
      * Create scene interface
      */
     Main.prototype.createGameScene = function () {
+        // 创建世界
+        this.gameWorld = new demoWolrd(this);
+        // 创建游戏场景
+        var BigenScene = new GameScene.basicScene('src/game/scene/beginScene.exml');
+        this.addChild(BigenScene);
+        return;
         // let sky = this.createBitmapByName("bg_jpg");
         // this.addChild(sky);
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
         // sky.width = stageW;
         // sky.height = stageH;
-        // 创建游戏场景
-        var BigenScene = new GameScene.basicScene('src/game/scene/beginScene.exml');
-        this.addChild(BigenScene);
         //  创建p2物理世界
         var p2World = new p2.World();
         p2World.sleepMode = p2.World.BODY_SLEEPING;
@@ -297,27 +300,26 @@ var Main = (function (_super) {
      * Description file loading is successful, start to play the animation
      */
     Main.prototype.startAnimation = function (result) {
-        var _this = this;
         var parser = new egret.HtmlTextParser();
-        var textflowArr = result.map(function (text) { return parser.parse(text); });
-        var textfield = this.textfield;
-        var count = -1;
-        var change = function () {
-            count++;
-            if (count >= textflowArr.length) {
-                count = 0;
-            }
-            var textFlow = textflowArr[count];
-            // 切换描述内容
-            // Switch to described content
-            textfield.textFlow = textFlow;
-            var tw = egret.Tween.get(textfield);
-            tw.to({ "alpha": 1 }, 200);
-            tw.wait(2000);
-            tw.to({ "alpha": 0 }, 200);
-            tw.call(change, _this);
-        };
-        change();
+        // let textflowArr = result.map(text => parser.parse(text));
+        // let textfield = this.textfield;
+        // let count = -1;
+        // let change = () => {
+        //     count++;
+        //     if (count >= textflowArr.length) {
+        //         count = 0;
+        //     }
+        //     let textFlow = textflowArr[count];
+        //     // 切换描述内容
+        //     // Switch to described content
+        //     textfield.textFlow = textFlow;
+        //     let tw = egret.Tween.get(textfield);
+        //     tw.to({ "alpha": 1 }, 200);
+        //     tw.wait(2000);
+        //     tw.to({ "alpha": 0 }, 200);
+        //     tw.call(change, this);
+        // };
+        // change();
     };
     /**
      * 点击按钮
