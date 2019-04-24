@@ -3,14 +3,15 @@ module GameWorld {
 
 		public Game;
 
-		public constructor(Game) {
+		public constructor(Game,Opts=[]) {
 			this.Game = Game;
+
 		}
 
 		public Layers: { [key: string]: number } = {
 			'Bottom': 0, 'Main': 1, 'Effect': 2, 'Ui': 3, 'Pad': 4
 		}
-		
+
 
 		//	获取图层组编号
 		public getLayersIndex = (name: string): number | null => {
@@ -18,12 +19,12 @@ module GameWorld {
 		}
 
 		//	获取图层
-		public getLayer = (name:string): GameLayer.LayerGroup=>{
-			return this.Game.getChildAt(this.getLayersIndex(name))||null;
+		public getLayer = (name: string): GameLayer.LayerGroup => {
+			return this.Game.getChildAt(this.getLayersIndex(name)) || null;
 		}
 
 		//	插入元素到图层
-		public addChildTo(ele:egret.Sprite,layersName:string){
+		public addChildTo(ele: egret.Sprite, layersName: string) {
 			this.getLayer(layersName).addChild(ele);
 		}
 
@@ -52,6 +53,21 @@ module GameWorld {
 			let _layer = this.Game.getChildAt(this.getLayersIndex(layerName));
 			_scene.width = this.Game.stageWidth, _scene.height = this.Game.stageHeight;
 			_layer.addChildAt(_scene, 0);
+		}
+	};
+	// 重力世界
+	export class physicsWorld extends BaseWorld {
+		public Gravity: p2.World;
+
+		public constructor(Game){
+			super(Game);
+			c
+		}
+
+		public createGravity = (x: number = 0, y: number = 0) => {
+			this.Gravity = new p2.World();
+			this.Gravity.sleepMode = p2.World.BODY_SLEEPING;
+			this.Gravity.gravity = [x, y];
 		}
 	}
 }
