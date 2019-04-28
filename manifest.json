@@ -19,6 +19,7 @@
 		"bin-debug/Main.js",
 		"bin-debug/Platform.js",
 		"bin-debug/ThemeAdapter.js",
+		"bin-debug/game/lib/modules/GameElement.js",
 		"bin-debug/game/lib/modules/GameLayer.js",
 		"bin-debug/game/lib/modules/GameScene.js",
 		"bin-debug/game/world/demo/demoWorld.js"

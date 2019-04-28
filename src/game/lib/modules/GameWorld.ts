@@ -3,7 +3,7 @@ module GameWorld {
 
 		public Game;
 
-		public constructor(Game,Opts=[]) {
+		public constructor(Game, Opts = []) {
 			this.Game = Game;
 
 		}
@@ -24,8 +24,8 @@ module GameWorld {
 		}
 
 		//	插入元素到图层
-		public addChildTo(ele: egret.Sprite, layersName: string) {
-			this.getLayer(layersName).addChild(ele);
+		public addChildTo(element, layersName: string) {
+			this.getLayer(layersName).addChild(element);
 		}
 
 		//	创建图层		
@@ -59,15 +59,50 @@ module GameWorld {
 	export class physicsWorld extends BaseWorld {
 		public Gravity: p2.World;
 
-		public constructor(Game){
+		public constructor(Game) {
 			super(Game);
-			c
+
 		}
 
 		public createGravity = (x: number = 0, y: number = 0) => {
-			this.Gravity = new p2.World();
+			var factor: number = 50;
+			!!this.Gravity ? '' : this.Gravity = new p2.World();
 			this.Gravity.sleepMode = p2.World.BODY_SLEEPING;
 			this.Gravity.gravity = [x, y];
+
+			egret.Ticker.getInstance().register(function (dt) {
+				if (dt < 10) {
+					return;
+				}
+				if (dt > 1000) {
+					return;
+				}
+				this.Gravity.step(dt / 1000);
+
+				var stageHeight: number = egret.MainContext.instance.stage.stageHeight;
+				var l = this.Gravity.bodies.length;
+
+				for (var i: number = 0; i < l; i++) {
+					var boxBody: p2.Body = this.Gravity.bodies[i];
+					var box: egret.DisplayObject = boxBody.displays[0];
+					if (box) {
+						box.x = boxBody.position[0] * factor;
+						box.y = stageHeight - boxBody.position[1] * factor;
+						box.rotation = 360 - (boxBody.angle + boxBody.shapes[0].angle) * 180 / Math.PI;
+						if (boxBody.sleepState == p2.Body.SLEEPING) {
+							box.alpha = 0.5;
+						}
+						else {
+							box.alpha = 1;
+						}
+					}
+				}
+			}, this);
+		}
+
+		public addChildTo(element: GameElement.physicsElement, layerName: string) {
+			super.addChildTo(element, layerName);
+			this.Gravity.addBody(element.physicsBody);
 		}
 	}
 }

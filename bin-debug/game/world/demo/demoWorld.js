@@ -16,9 +16,10 @@ var demoWolrd = (function (_super) {
         _this.createLayers({});
         //  加载demo场景
         _this.loadScene('src/game/world/demo/scene/demoEnter.exml', 'Bottom');
+        _this.createGravity(0, 0.98);
         return _this;
     }
     return demoWolrd;
-}(GameWorld.BaseWorld));
+}(GameWorld.physicsWorld));
 __reflect(demoWolrd.prototype, "demoWolrd");
 //# sourceMappingURL=demoWorld.js.map

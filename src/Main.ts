@@ -106,17 +106,30 @@ class Main extends eui.UILayer {
         // 创建游戏场景
         let BigenScene = new GameScene.basicScene('src/game/scene/beginScene.exml');
         this.addChild(BigenScene);
+
+        //  创建一个刚体
+        let floorElement = new GameElement.rigidElement();
+        let floorSkin: egret.DisplayObject = this.createBitmapByName('earth_ground_png');
+        floorSkin.width = floorElement.width = this.gameWorld.Game.stage.stageWidth;
+        floorSkin.height = floorElement.height = 25;
+        floorElement.y = this.gameWorld.Game.stage.stageHeight - 35;
+
+        floorElement.setShape(GameElement.elementShapeDict.getShape('', floorElement), floorSkin)
+        this.gameWorld.addChildTo(floorSkin, 'Main')
+
+
+
         return;
 
 
-            // let sky = this.createBitmapByName("bg_jpg");
-            // this.addChild(sky);
-            let stageW = this.stage.stageWidth;
+        // let sky = this.createBitmapByName("bg_jpg");
+        // this.addChild(sky);
+        let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
         // sky.width = stageW;
         // sky.height = stageH;
 
-        
+
         //  创建p2物理世界
         let p2World: p2.World = new p2.World();
         p2World.sleepMode = p2.World.BODY_SLEEPING;

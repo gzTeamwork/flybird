@@ -171,6 +171,14 @@ var Main = (function (_super) {
         // 创建游戏场景
         var BigenScene = new GameScene.basicScene('src/game/scene/beginScene.exml');
         this.addChild(BigenScene);
+        //  创建一个刚体
+        var floorElement = new GameElement.rigidElement();
+        var floorSkin = this.createBitmapByName('earth_ground_png');
+        floorSkin.width = floorElement.width = this.gameWorld.Game.stage.stageWidth;
+        floorSkin.height = floorElement.height = 25;
+        floorElement.y = this.gameWorld.Game.stage.stageHeight - 35;
+        floorElement.setShape(GameElement.elementShapeDict.getShape('', floorElement), floorSkin);
+        this.gameWorld.addChildTo(floorSkin, 'Main');
         return;
         // let sky = this.createBitmapByName("bg_jpg");
         // this.addChild(sky);
