@@ -111,7 +111,10 @@ cc.Class({
             desiredSpeed = -this.maxSpeed;
         else if ((this.moveFlags & MOVE_RIGHT) == MOVE_RIGHT)
             desiredSpeed = this.maxSpeed;
-        this.body.angularVelocity = desiredSpeed;
+        // this.body.angularVelocity = desiredSpeed;
+        let velocity = this.body.linearVelocity;
+        velocity.x += desiredSpeed;
+        this.body.linearVelocity = velocity;
 
     },
 
@@ -131,7 +134,7 @@ cc.Class({
         console.log('jump')
         // 获取移动速度
         let velocity = this.body.linearVelocity;
-        velocity.y = this.maxSpeed * 10;
+        velocity.y = this.maxSpeed * 10 * 2.2;
         // 设置移动速度
         this.body.linearVelocity = velocity;
         // this.body.applyForce(cc.v2(0, this.maxSpeed * 10), cc.v2(this.x, this.y + 300), true);
