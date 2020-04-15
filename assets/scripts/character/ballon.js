@@ -11,8 +11,8 @@ cc.Class({
     properties: {
 
         //  最大速率
-        maxSpeed: 10
-
+        maxSpeed: 10,
+        hightDashboard: cc.ProgressBar
         // foo: {
         //     // ATTRIBUTES:
         //     default: null,        // The default value will be used only when the component attaching
@@ -39,17 +39,21 @@ cc.Class({
         controllerArea.on(cc.Node.EventType.TOUCH_START, this.onTouchStart, this);
         controllerArea.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
         this.moveFlags = 0;
+        this.hightDashboard.totalLength = this.maxSpeed
+        this.hightDashboard.progress = 0
     },
 
     touchStartPoint: null,
     touchStartTime: null,
     touchEndPoint: null,
     touchEndTime: null,
+    touchStatus: 0,
 
     onTouchStart(event) {
         let touchLoc = event.touch.getLocation();
         this.touchStartPoint = touchLoc;
         this.touchStartTime = new Date().getTime();
+        this.touchStatus = 1;
     },
 
     onTouchEnd(event) {
@@ -58,6 +62,7 @@ cc.Class({
         this.touchEndPoint = touchLoc;
 
         this.moveFlags = 1;
+        this.touchStatus = 0;
         //  结算动力
         this.pushBallon(
             this.touchStartPoint,
@@ -82,6 +87,16 @@ cc.Class({
             )
         }
 
+
+        // if (this.touchStatus) {
+        // let yd = this.body.linearVelocity.y
+        // this.hightDashboard.progress = Math.abs(yd) / this.maxSpeed
+        // }
+
+    },
+    lateUpdate: function () {
+        let yd = this.body.linearVelocity.y
+        this.hightDashboard.progress = Math.abs(yd) / this.maxSpeed
     },
     pushBallon: function (sp, ep, ms = 1, character) {
 
@@ -97,12 +112,13 @@ cc.Class({
         }
 
         let xd, yd;
-        xd = (ep.x - sp.x) * ms;
-        yd = Math.abs(sp.y - ep.y) * ms;
-
+        xd = (ep.x - sp.x) * 5;
+        yd = Math.abs(sp.y - ep.y) * 5;
+        yd = yd > this.maxSpeed ? this.maxSpeed : yd
         // 施力
         character.body.angularVelocity = xd / 3;
         character.body.linearVelocity = cc.Vec2(xd, yd);
+
 
 
 
